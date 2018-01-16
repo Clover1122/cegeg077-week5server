@@ -136,14 +136,18 @@ app.get('/getGeoJSON/:tablename/:geomcolumn', function (req,res) {
         	// now run the query
         	client.query(querystring,function(err,result){
           //call `done()` to release the client back to the pool
-          	done(); 
+          	console.log("trying");
+			done(); 
 	          if(err){
                	console.log(err);
                		res.status(400).send(err);
           	}
-           	colnames = result.rows;
-       	});
-        	console.log("colnames are " + colnames);
+//			for (var i =0; i< result.rows.length ;i++) {
+//				console.log(result.rows[i].string_agg);
+//			}
+          	thecolnames = result.rows[0].string_agg;
+			colnames = thecolnames;
+			console.log("the colnames "+thecolnames);
 
         	// now use the inbuilt geoJSON functionality
         	// and create the required geoJSON format using a query adapted from here:  
@@ -165,6 +169,8 @@ app.get('/getGeoJSON/:tablename/:geomcolumn', function (req,res) {
                		res.status(400).send(err);
           	 }
            	res.status(200).send(result.rows);
+       	});
+        
        	});
     });
 });
