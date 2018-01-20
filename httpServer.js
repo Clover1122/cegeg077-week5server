@@ -84,5 +84,15 @@ app.get('/postgistest', function (req,res) {
   res.sendFile(__dirname + '/'+req.params.name1+'/'+req.params.name2+ '/'+req.params.name3+"/"+req.params.name4);
 });
 
+app.get('/getGeoJSON/:tablename/:geomcolumn', function (req,res) {
+  databasecode.generateGeoJSON(req,res);
+});
+
+
+app.get('/getPOI', function (req,res) {
+  databasecode.getPOI(req,res);
+});
+
+
 // serve static files - e.g. html, css
 app.use(express.static(__dirname));
