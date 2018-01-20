@@ -4,31 +4,44 @@ var path = require("path");
 var app = express();
 var fs = require('fs');
 var bodyParser = require('body-parser');
-var databasecode  = require("databasecode");
-
-
-app.get('/database',function(req,res){
-  console.log("database");
-  databasecode.printMsg();
-  res.send("database");
-});
-
-app.get('/postgistest', function (req,res) {
-  databasecode.simpleQuery(req,res);
-});
-
 
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 app.use(bodyParser.json());
 
-	// adding functionality to allow cross-domain queries when PhoneGap is running a server
-	app.use(function(req, res, next) {
-		res.setHeader("Access-Control-Allow-Origin", "*");
-		res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
-		res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-		next();
+// adding functionality to allow cross-domain queries when PhoneGap is running a server
+app.use(function(req, res, next) {
+	res.setHeader("Access-Control-Allow-Origin", "*");
+	res.setHeader("Access-Control-Allow-Headers", "X-Requested-With");
+	res.setHeader('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+	next();
+});
+
+
+	
+// adding functionality to log the requests
+app.use(function (req, res, next) {
+	var filename = path.basename(req.url);
+	var extension = path.extname(filename);
+	console.log("The file " + filename + " was requested.");
+	next();
+});
+app.get('/postgistest', function (req,res) {
+  databasecode.simpleQuery(req,res);
+});
+	
+
+	
+	// add an http server to serve files to the Edge browser 
+	// due to certificate issues it rejects the https files if they are not
+	// directly called in a typed URL
+	var http = require('http');
+	var httpServer = http.createServer(app); 
+	httpServer.listen(4480);
+
+	app.get('/',function (req,res) {
+		res.send("hello world from the HTTP server");
 	});
 
 
