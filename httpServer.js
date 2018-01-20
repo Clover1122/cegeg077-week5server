@@ -30,6 +30,11 @@ app.use(function (req, res, next) {
 app.get('/postgistest', function (req,res) {
   databasecode.simpleQuery(req,res);
 });
+
+app.post('/uploadData', function (req,res) {
+  databasecode.uploadData(req,res);
+});
+
 	
 app.get('/getGeoJSON/:tablename/:geomcolumn', function (req,res) {
   databasecode.generateGeoJSON(req,res);
