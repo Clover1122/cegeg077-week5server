@@ -2,8 +2,17 @@
 var express = require('express');
 var path = require("path");
 var app = express();
-	var fs = require('fs');
+var fs = require('fs');
 var bodyParser = require('body-parser');
+var databasecode  = require("databasecode");
+
+
+app.get('/database',function(req,res){
+  console.log("database");
+  databasecode.printMsg();
+  res.send("database");
+});
+
 
 app.use(bodyParser.urlencoded({
   extended: true
@@ -235,3 +244,5 @@ app.get('/getGeoJSON/:tablename/:geomcolumn', function (req,res) {
   res.sendFile(__dirname + '/'+req.params.name1+'/'+req.params.name2+ '/'+req.params.name3+"/"+req.params.name4);
 });
 
+// serve static files - e.g. html, css
+app.use(express.static(__dirname));
